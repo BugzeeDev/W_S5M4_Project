@@ -20,12 +20,13 @@ async function moduleProject4() {
   const dropDown = document.querySelector("#citySelect")
   dropDown.addEventListener('change', async evt => {
     try {
-      evt.target.setAttribute('disabled', 'disabled')
+      document.querySelector('#citySelect').setAttribute('disabled', 'disabled')
       document.querySelector('#weatherWidget').style.display = 'none'
       document.querySelector('.info').textContent = 'Fetching weather data...'
 
       let city = evt.target.value
       let url = `http://localhost:3003/api/weather?city=${city}`
+      // eslint-disable-next-line no-undef
       const result = await axios.get(url)
       
       document.querySelector('#weatherWidget').style.display = 'block'
@@ -54,15 +55,23 @@ async function moduleProject4() {
         let temps = card.children[2]
         let precip = card.children[3]
 
-        weekday.textContent = day.Date
+        weekday.textContent = getWeekDay(day.date)
         apparent.textContent = descriptions.find(d => d[0] === day.weather_description)[1]
         temps.textContent = `${day.temperature_min}°/${day.temperature_max}°`
         precip.textContent = `Precipitation: ${day.precipitation_probability * 100}%`
       })
+      document.querySelector('#location').firstElementChild.textContent = data.location.city
     } catch (error) {
       console.log(`Promise rejected with an error: `. error.message)
     }
   })
+  function getWeekDay(dateString) {
+    const date = new Date(dateString);
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const dayNumber = date.getDay();
+
+    return daysOfWeek[dayNumber + 1];
+  }
   // 👆 WORK WORK ABOVE THIS LINE 👆
 
 }
